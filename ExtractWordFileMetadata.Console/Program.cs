@@ -2,7 +2,10 @@
 
 using ExtractWordFileMetadata.Application.Exceptions;
 using ExtractWordFileMetadata.Application;
+using ExtractWordFileMetadata.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using ExtractWordFileMetadata.Application.Interfaces;
+using ExtractWordFileMetadata.Application.UseCases;
 
 string[] inputFilePaths = new string[] { @"C:\Users\Moham\Documents\test01.docx" };
 string outPutFilePath = @"C:\Users\Moham\Documents\ExtractWordFileMetadata.json";
@@ -14,19 +17,23 @@ if (inputFilePaths.Length < 1 || string.IsNullOrEmpty(outPutFilePath) || !File.E
 }
 
 //DI
-var serviceProvider = new ServiceCollection();
-serviceProvider.AddApplication()
+var serviceProvider = new ServiceCollection()
+    .AddApplication()
+    .AddInfrastructure()
     .BuildServiceProvider()
     ;
 
 
 try
 {
-    //ProcessFileUseCase
+    var processFilesUseCase = serviceProvider.GetRequiredService<IProcessFileUseCase>();
+    var reportGenerator = serviceProvider.GetRequiredService<IReportGenerator>();
 
-    //Extract
+    //ProcessFileUseCase --> Extract
+    var (processedFiles, invalidFiles) = processFilesUseCase.Execute(inputFilePaths);
 
     //Report
+    reportGenerator.Generate(outPutFilePath, processedFiles, invalidFiles);
 }
 catch (Exception ex)
 {
