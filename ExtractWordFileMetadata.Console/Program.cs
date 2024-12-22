@@ -1,2 +1,27 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+
+using ExtractWordFileMetadata.Application.Exceptions;
+
+string[] inputFilePaths = new string[] { @"C:\Users\Moham\Documents\test01.docx" };
+string outPutFilePath = @"C:\Users\Moham\Documents\ExtractWordFileMetadata.json";
+
+if (inputFilePaths.Length < 1 || string.IsNullOrEmpty(outPutFilePath) || !File.Exists(outPutFilePath))
+{
+    Console.WriteLine("File Paths Is Empty!");
+    return;
+}
+
+//DI
+
+try
+{
+    //ProcessFileUseCase
+
+    //Extract
+
+    //Report
+}
+catch (Exception ex)
+{
+    ExceptionHandler.Handle(ex, "Unhandled exception in the app");
+}
